@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror Intentions - A Date Night Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="page active">
+        <div class="container">
+            <h1 class="logo">Mirror Intentions</h1>
+            <p class="tagline">A 15-minute date night game that reveals how well you understand each other — without conflict.</p>
+            <button class="btn-primary" onclick="startGame()">Start Playing</button>
+            <p class="disclaimer">This is a reflection game, not a test. Play with curiosity.</p>
+        </div>
+    </div>
+
+    <!-- Player Setup Page -->
+    <div id="setup-page" class="page">
+        <div class="container">
+            <h2>Welcome! Here's how this works:</h2>
+            <p class="instructions">You'll take turns writing scenarios, guessing intentions, and reflecting together. Pass the device back and forth when prompted.</p>
+
+            <div class="partner-selection">
+                <h3>Who goes first?</h3>
+                <label class="radio-option">
+                    <input type="radio" name="first-player" value="A" checked>
+                    <span>Partner A goes first</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="first-player" value="B">
+                    <span>Partner B goes first</span>
+                </label>
+            </div>
+
+            <button class="btn-primary" onclick="setupComplete()">Let's begin</button>
+        </div>
+    </div>
+
+    <!-- Scenario Input Page -->
+    <div id="scenario-input-page" class="page">
+        <div class="container">
+            <h2 id="scenario-input-title">Partner A: Write 3 everyday moments</h2>
+            <p class="instructions">Think of small, ambiguous behaviors that could be misunderstood. Not complaints — just moments.</p>
+
+            <div class="scenario-inputs">
+                <div class="input-group">
+                    <label>Moment 1</label>
+                    <input type="text" class="scenario-input" id="scenario-1" placeholder="I smile while checking my phone" maxlength="150">
+                </div>
+                <div class="input-group">
+                    <label>Moment 2</label>
+                    <input type="text" class="scenario-input" id="scenario-2" placeholder="I choose to stay quiet during a conversation" maxlength="150">
+                </div>
+                <div class="input-group">
+                    <label>Moment 3</label>
+                    <input type="text" class="scenario-input" id="scenario-3" placeholder="I suggest we cancel plans and stay in" maxlength="150">
+                </div>
+            </div>
+
+            <button class="btn-primary" id="scenario-submit-btn" onclick="submitScenarios()">Done — pass to Partner B</button>
+        </div>
+    </div>
+
+    <!-- Handoff Screen -->
+    <div id="handoff-page" class="page">
+        <div class="container centered">
+            <h2 id="handoff-title">Pass the device to Partner B</h2>
+            <div class="handoff-message">
+                <p id="handoff-instruction">Partner A, look away! Partner B, tap below when ready.</p>
+            </div>
+            <button class="btn-primary" onclick="handoffComplete()">I'm ready</button>
+        </div>
+    </div>
+
+    <!-- Guessing Phase -->
+    <div id="guessing-page" class="page">
+        <div class="container">
+            <h2 id="guessing-title">Partner B: What do you think Partner A's intention is?</h2>
+            <div class="scenario-display">
+                <div class="scenario-label">Scenario</div>
+                <div class="scenario-text" id="guess-scenario-text"></div>
+            </div>
+
+            <div class="input-group">
+                <label>In your own words, what do you think your partner's intention is in this moment?</label>
+                <textarea id="guess-input" class="guess-textarea" rows="4" placeholder="Type your guess here..."></textarea>
+            </div>
+
+            <div class="progress-indicator">
+                <span id="guess-progress">Scenario 1 of 3</span>
+            </div>
+
+            <button class="btn-primary" onclick="submitGuess()">Next scenario</button>
+        </div>
+    </div>
+
+    <!-- Reveal & Rating Phase -->
+    <div id="reveal-page" class="page">
+        <div class="container">
+            <h2>Let's compare</h2>
+
+            <div class="reveal-section">
+                <div class="reveal-item">
+                    <div class="reveal-label">Scenario</div>
+                    <div class="reveal-text" id="reveal-scenario"></div>
+                </div>
+
+                <div class="reveal-item">
+                    <div class="reveal-label" id="reveal-guesser-label">Partner B's guess</div>
+                    <div class="reveal-text guess-text" id="reveal-guess"></div>
+                </div>
+
+                <div class="reveal-item">
+                    <div class="reveal-label" id="reveal-writer-label">Partner A's true intention</div>
+                    <textarea id="true-intent-input" class="intent-textarea" rows="3" placeholder="Partner A: What was your actual intention?"></textarea>
+                </div>
+            </div>
+
+            <div class="rating-section">
+                <h3>Now, both of you:</h3>
+
+                <div class="slider-group">
+                    <label id="accuracy-label">Partner A: How close was their guess?</label>
+                    <div class="slider-container">
+                        <span class="slider-min">Way off</span>
+                        <input type="range" id="accuracy-slider" min="0" max="5" value="3" step="1">
+                        <span class="slider-max">Spot on</span>
+                    </div>
+                    <div class="slider-value" id="accuracy-value">3</div>
+                </div>
+
+                <div class="slider-group">
+                    <label id="confidence-label">Partner B: How confident were you in your guess?</label>
+                    <div class="slider-container">
+                        <span class="slider-min">Totally unsure</span>
+                        <input type="range" id="confidence-slider" min="0" max="5" value="3" step="1">
+                        <span class="slider-max">Very sure</span>
+                    </div>
+                    <div class="slider-value" id="confidence-value">3</div>
+                </div>
+            </div>
+
+            <div class="reflection-optional">
+                <label>What surprised you? <span class="optional">(optional)</span></label>
+                <textarea id="reflection-input" class="reflection-textarea" rows="2" placeholder="Any thoughts?"></textarea>
+            </div>
+
+            <div class="progress-indicator">
+                <span id="reveal-progress">Scenario 1 of 6</span>
+            </div>
+
+            <button class="btn-primary" onclick="submitReveal()">Next</button>
+        </div>
+    </div>
+
+    <!-- Results Page -->
+    <div id="results-page" class="page">
+        <div class="container">
+            <h1>Your Attunement Map</h1>
+
+            <div class="score-visual">
+                <div class="circles-container">
+                    <div class="circle circle-a"></div>
+                    <div class="circle circle-b"></div>
+                </div>
+            </div>
+
+            <div class="score-display">
+                <div class="score-number" id="attunement-score">22 out of 30</div>
+                <p class="score-interpretation">You're tuned into each other in some areas, and discovering new layers in others.</p>
+            </div>
+
+            <div class="reflection-prompts">
+                <h3>Take a moment to reflect together:</h3>
+                <ul class="prompt-list">
+                    <li>Where did you feel most aligned?</li>
+                    <li>Where did intentions differ from assumptions?</li>
+                    <li>What patterns did you notice?</li>
+                </ul>
+            </div>
+
+            <div class="results-actions">
+                <button class="btn-primary" onclick="resetGame()">Play again</button>
+            </div>
+
+            <p class="privacy-note">💡 No data is saved. Everything stays between you two.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
